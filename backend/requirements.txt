@@ -1,0 +1,10 @@
+tavily-python
+fastapi[standard]
+
+google-genai
+
+uvicorn
+python-dotenv
+
+SQLAlchemy
+psycopg2-binary
