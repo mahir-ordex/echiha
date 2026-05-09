@@ -13,3 +13,4 @@ supabase==2.15.3
 passlib
 python-jose[cryptography]
 
+python-dotenv

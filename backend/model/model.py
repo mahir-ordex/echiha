@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, Date, DateTime
+from sqlalchemy import Column, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from utils.database import Base
 from datetime import datetime
@@ -26,7 +26,7 @@ class Conversation(Base):
     user_id = Column(String, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="conversations")
-    messages = relationship("Message", back_populates="conversation")
+    messages = relationship("Message", back_populates="conversation", order_by="Message.created_at.desc()")
 
 
 class Message(Base):

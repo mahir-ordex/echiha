@@ -1,29 +1,54 @@
-import { createClient } from "@supabase/supabase-js/dist/index.cjs"
-
-
-
-
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { supabase } from "../lib/supabase"
 
 const Auth = () => {
-    const supabase = createClient(import.meta.env.VITE_SUPABASE_URL,import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)
+  const navigate = useNavigate()
 
-    const login = async() => {
-        const {data,error} =await supabase.auth.signInWithOAuth({
-            provider:"github"
-        })
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession()
 
-        if(error){
-            alert("Error while signin")
-        }
-        console.log(data)
+      if (data.session) {
+        navigate("/dashboard", { replace: true })
+      }
     }
 
-    
-    return (
-        <>
-        <button onClick={() => login()}>Login With GitHub</button>
-        </>
-    )
+    checkSession()
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        navigate("/dashboard", { replace: true })
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [navigate])
+
+  const login = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `${window.location.origin}/auth`,
+      },
+    })
+  }
+
+  return (
+    <div className="auth-screen">
+      <div className="auth-card">
+        <h1>Sign in</h1>
+        <p>Continue with GitHub to access the search assistant.</p>
+        <button className="ask-button ask-button--auth" onClick={login}>
+          Sign in with GitHub
+        </button>
+      </div>
+    </div>
+  )
 }
 
 export default Auth
