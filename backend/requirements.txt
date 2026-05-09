@@ -8,7 +8,7 @@ python-dotenv
 
 SQLAlchemy
 psycopg2-binary
-supabase
+supabase==2.15.3
 
 passlib
 python-jose[cryptography]
